@@ -81,7 +81,7 @@ function renderPrecepts() {
     const input = document.createElement('input');
     input.type = 'text';
     input.value = item.note || '';
-    input.placeholder = '備考（破った理由など）';
+    input.placeholder = '備考';
     input.addEventListener('input', (e) => {
       item.note = e.target.value;
     });

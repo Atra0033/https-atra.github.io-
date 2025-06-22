@@ -1,9 +1,9 @@
 const precepts = [
-  { jp:'不殺生', en:'Do not kill' },
-  { jp:'不偸盗', en:'Do not steal' },
-  { jp:'不邪淫', en:'Do not commit sexual misconduct' },
-  { jp:'不妄語', en:'Do not lie' },
-  { jp:'不飲酒', en:'Do not consume intoxicants' },
+  { jp:'不殺生' },
+  { jp:'不偸盗' },
+  { jp:'不邪淫' },
+  { jp:'不妄語' },
+  { jp:'不飲酒' },
 ];
 
 const usernameInput = document.getElementById('usernameInput');
@@ -44,7 +44,7 @@ function loadDate(date){
     div.className = 'precept';
 
     const label = document.createElement('label');
-    label.innerHTML = `<strong>${p.jp}</strong><br><small>${p.en}</small>`;
+    label.innerHTML = `<strong>${p.jp}</strong>`;
 
     let ok = rec ? rec[i].ok : true;
     const toggle = document.createElement('div');
@@ -93,12 +93,3 @@ saveDay.addEventListener('click', ()=>{
 
 buildDates();
 loadDate(state.current);
-
-window.addYesterdayTest = function(){
-  const d=new Date(); d.setDate(d.getDate()-1);
-  const ds=d.toISOString().slice(0,10);
-  state.records[ds] = precepts.map(_=>({ok:false,note:'テスト'}));
-  localStorage.setItem('records', JSON.stringify(state.records));
-  buildDates();
-  alert(`昨日(${ds})のテストデータを追加しました。`);
-};

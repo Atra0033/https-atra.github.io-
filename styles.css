@@ -178,13 +178,42 @@ button#saveDay {
 /* ===== レスポンシブ対応 ===== */
 @media (max-width: 600px) {
   .app {
+    /* 1カラム縦積みに */
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto 1fr auto;
+    display: grid;
   }
 
   header {
+    grid-column: 1 / 2;
+    grid-row: 1;
     justify-content: center;
     gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  aside#dates {
+    grid-column: 1 / 2;
+    grid-row: 2;
+    max-height: 150px;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.4rem;
+    margin: 0.5rem 0;
+  }
+  aside#dates button {
+    margin-right: 0.3rem;
+    margin-bottom: 0;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  main {
+    grid-column: 1 / 2;
+    grid-row: 3;
+    padding: 0.6rem;
   }
 
   header h1 {
@@ -208,25 +237,6 @@ button#saveDay {
     text-align: center;
     width: 100%;
     margin-top: 0.3rem;
-  }
-
-  aside#dates {
-    max-height: 150px;
-    flex-direction: row;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 0.4rem;
-  }
-  aside#dates button {
-    margin-right: 0.3rem;
-    margin-bottom: 0;
-    font-size: 0.75rem;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  main {
-    padding: 0.6rem;
   }
 
   .precept {

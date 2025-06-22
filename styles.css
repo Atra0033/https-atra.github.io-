@@ -1,0 +1,128 @@
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:sans-serif; background:#fafafa; }
+.app { display:grid; grid-template-columns:120px 1fr; grid-template-rows:auto 1fr auto; min-height:100vh; }
+
+header {
+  grid-column:1/3;
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.6rem;
+  background:#34495e;
+  color:white;
+}
+header h1 { font-size:1.3rem; font-weight:bold; }
+header input { padding:0.3rem; font-size:0.9rem; width:6rem; }
+header button { padding:0.3rem 0.5rem; font-size:0.9rem; width:3rem; background:#2980b9; border:none; color:white; cursor:pointer; }
+header .credit { margin-left:auto; font-size:0.9rem; color:#eee; }
+
+aside#dates {
+  grid-row:2;
+  background:#ecf0f1;
+  padding:0.5rem;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+}
+aside#dates button {
+  padding:0.4rem;
+  margin-bottom:0.4rem;
+  border:none;
+  font-size:0.8rem;
+  cursor:pointer;
+}
+aside#dates button.passed { background:#abebc6; }
+aside#dates button.broken { background:#f5b7b1; }
+
+main {
+  grid-row:2;
+  padding:0.8rem;
+  position:relative;
+}
+.current-container {
+  position:relative;
+}
+#currentDate {
+  position:absolute;
+  top:0;
+  left:0;
+  font-size:1.2rem;
+  font-weight:bold;
+  padding:0.2rem;
+}
+
+.precepts {
+  margin-top:2.5rem; /* ★ 左上の日付との間に余白を追加 */
+}
+
+.precept {
+  display:grid;
+  grid-template-columns:2fr 0.8fr 3fr;
+  align-items:center;
+  gap:0.4rem;
+  margin-bottom:0.6rem;
+}
+.precept label {
+  font-size:1.2rem;
+  font-weight:bold;
+}
+.precept small { font-size:0.9rem; }
+
+.toggle-switch {
+  position:relative;
+  width:4.5rem;
+  height:2.2rem;
+  border-radius:1.1rem;
+  background:#ddd;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.toggle-handle {
+  position:absolute;
+  top:0.05rem;
+  width:2.1rem;
+  height:2.1rem;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:white;
+  font-weight:bold;
+  transition:left 0.2s;
+}
+.toggle-switch.on .toggle-handle {
+  left:0.05rem;
+  background:#2ecc71;
+}
+.toggle-switch.off .toggle-handle {
+  left:2.25rem;
+  background:#e74c3c;
+}
+.toggle-switch.off { background:#f5b7b1; }
+.toggle-switch.on { background:#abebc6; }
+
+.precept input[type="text"] {
+  padding:0.3rem;
+  font-size:0.9rem;
+  width:100%;
+}
+
+button#saveDay {
+  padding:0.5rem 0.8rem;
+  font-size:1rem;
+  background:#2980b9;
+  border:none;
+  color:white;
+  cursor:pointer;
+  width:100%;
+  margin-top:0.4rem;
+}
+
+@media (max-width:600px) {
+  .app { grid-template-columns:1fr; grid-template-rows:auto 1fr auto; }
+  header { flex-wrap:wrap; }
+  aside#dates { flex-direction:row; overflow-x:auto; white-space:nowrap; grid-row:2; }
+  aside#dates button { margin-right:0.4rem; margin-bottom:0; }
+  main { grid-row:3; }
+}

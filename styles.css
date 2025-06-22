@@ -1,61 +1,85 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:sans-serif; background:#fafafa; }
 
+/* --- レイアウトの基本 --- */
 .app {
-  display:grid;
-  grid-template-columns:120px 1fr;
-  grid-template-rows:auto 1fr auto;
-  min-height:100vh;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  gap: 0.5rem; /* 少し隙間追加 */
 }
 
 header {
-  grid-column:1/3;
-  display:flex;
-  align-items:center;
-  gap:0.5rem;
-  padding:0.6rem;
-  background:#34495e;
-  color:white;
+  grid-column: 1 / 3;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  background: #34495e;
+  color: white;
+  flex-wrap: wrap; /* 幅が狭い時は折り返し */
 }
-header h1 { font-size:1.3rem; font-weight:bold; }
-header input { padding:0.3rem; font-size:0.9rem; width:6rem; }
+header h1 {
+  font-size: 1.3rem;
+  font-weight: bold;
+  white-space: nowrap;
+}
+header input {
+  padding: 0.3rem;
+  font-size: 0.9rem;
+  width: 6rem;
+  min-width: 4rem;
+}
 header button {
-  padding:0.3rem 0.5rem;
-  font-size:0.9rem;
-  width:3rem;
-  background:#2980b9;
-  border:none;
-  color:white;
-  cursor:pointer;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.9rem;
+  width: 3rem;
+  min-width: 3rem;
+  background: #2980b9;
+  border: none;
+  color: white;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 header .credit {
-  margin-left:auto;
-  font-size:0.9rem;
-  color:#eee;
+  margin-left: auto;
+  font-size: 0.9rem;
+  color: #eee;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 aside#dates {
-  grid-row:2;
-  background:#ecf0f1;
-  padding:0.5rem;
-  overflow-y:auto;
-  display:flex;
-  flex-direction:column;
+  grid-row: 2;
+  background: #ecf0f1;
+  padding: 0.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh; /* 高さ制限 */
 }
 aside#dates button {
-  padding:0.4rem;
-  margin-bottom:0.4rem;
-  border:none;
-  font-size:0.8rem;
-  cursor:pointer;
+  padding: 0.4rem;
+  margin-bottom: 0.4rem;
+  border: none;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
 }
-aside#dates button.passed { background:#abebc6; }
-aside#dates button.broken { background:#f5b7b1; }
+aside#dates button.passed {
+  background: #abebc6;
+}
+aside#dates button.broken {
+  background: #f5b7b1;
+}
 
 main {
-  grid-row:2;
-  padding:0.8rem;
-  position:relative;
+  grid-row: 2;
+  padding: 0.8rem;
+  position: relative;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .current-container {
@@ -65,84 +89,163 @@ main {
   padding: 0.5rem;
   background: #ecf0f1;
   margin-bottom: 1rem;
+  word-break: break-word;
 }
 
 #currentDate {
   font-size: 1.2rem;
   font-weight: bold;
   text-align: center;
-  word-break: break-word;
   max-width: 100%;
   line-height: 1.4;
 }
 
-.precepts { margin-top:1rem; }
+.precepts {
+  margin-top: 1rem;
+}
+
 .precept {
-  display:grid;
-  grid-template-columns:2fr 0.8fr 3fr;
-  align-items:center;
-  gap:0.4rem;
-  margin-bottom:0.6rem;
+  display: grid;
+  grid-template-columns: 2fr 0.8fr 3fr;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+  word-break: break-word;
 }
 .precept label {
-  font-size:1.8rem;
-  font-weight:bold;
+  font-size: 1.8rem;
+  font-weight: bold;
+  white-space: nowrap;
 }
 
 .toggle-switch {
-  position:relative;
-  width:4.5rem; height:2.2rem;
-  border-radius:1.1rem;
-  background:#ddd;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  position: relative;
+  width: 4.5rem;
+  height: 2.2rem;
+  border-radius: 1.1rem;
+  background: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .toggle-handle {
-  position:absolute;
-  top:0.05rem;
-  width:2.1rem; height:2.1rem;
-  border-radius:50%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  color:white; font-weight:bold;
-  transition:left 0.2s;
+  position: absolute;
+  top: 0.05rem;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  transition: left 0.2s;
 }
-.toggle-switch.on .toggle-handle { left:0.05rem; background:#2ecc71; }
-.toggle-switch.off .toggle-handle { left:2.25rem; background:#e74c3c; }
-.toggle-switch.off { background:#f5b7b1; }
-.toggle-switch.on { background:#abebc6; }
+.toggle-switch.on .toggle-handle {
+  left: 0.05rem;
+  background: #2ecc71;
+}
+.toggle-switch.off .toggle-handle {
+  left: 2.25rem;
+  background: #e74c3c;
+}
+.toggle-switch.off {
+  background: #f5b7b1;
+}
+.toggle-switch.on {
+  background: #abebc6;
+}
 
 .precept input[type="text"] {
-  padding:0.3rem;
-  font-size:0.9rem;
-  width:100%;
+  padding: 0.3rem;
+  font-size: 0.9rem;
+  width: 100%;
+  min-width: 0;
+  word-break: break-word;
 }
 
 button#saveDay {
-  padding:0.5rem 0.8rem;
-  font-size:1rem;
-  background:#2980b9;
-  border:none;
-  color:white;
-  cursor:pointer;
-  width:100%;
-  margin-top:0.4rem;
+  padding: 0.5rem 0.8rem;
+  font-size: 1rem;
+  background: #2980b9;
+  border: none;
+  color: white;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 0.4rem;
 }
 
-@media (max-width:600px) {
+/* ===== レスポンシブ対応 ===== */
+@media (max-width: 600px) {
   .app {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto auto auto;
   }
 
+  header {
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  header h1 {
+    font-size: 1.2rem;
+  }
+
+  header input {
+    width: 5rem;
+    font-size: 0.85rem;
+  }
+
+  header button {
+    width: auto;
+    padding: 0.3rem 0.6rem;
+  }
+
+  header .credit {
+    font-size: 0.8rem;
+    margin-left: 0;
+    white-space: normal;
+    text-align: center;
+    width: 100%;
+    margin-top: 0.3rem;
+  }
+
+  aside#dates {
+    max-height: 150px;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.4rem;
+  }
+  aside#dates button {
+    margin-right: 0.3rem;
+    margin-bottom: 0;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  main {
+    padding: 0.6rem;
+  }
+
+  .precept {
+    grid-template-columns: 1.8fr 1fr 2fr;
+    font-size: 0.9rem;
+    gap: 0.3rem;
+  }
   .precept label {
-    font-size:1.4rem;
+    font-size: 1.4rem;
+    white-space: normal;
   }
 
   #currentDate {
     font-size: 1rem;
     padding: 0.3rem;
+  }
+
+  button#saveDay {
+    font-size: 1rem;
+    padding: 0.5rem;
   }
 }

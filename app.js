@@ -1,95 +1,122 @@
 const precepts = [
-  { jp:'不殺生' },
-  { jp:'不偸盗' },
-  { jp:'不邪淫' },
-  { jp:'不妄語' },
-  { jp:'不飲酒' },
+  '不殺生',
+  '不偸盗',
+  '不邪淫',
+  '不妄語',
+  '不飲酒',
 ];
 
-const usernameInput = document.getElementById('usernameInput');
-const saveName = document.getElementById('saveName');
-const datesEl = document.getElementById('dates');
-const currentDateEl = document.getElementById('currentDate');
-const preceptsEl = document.querySelector('.precepts');
-const saveDay = document.getElementById('saveDay');
-
 let state = {
-  username: localStorage.getItem('username') || '',
-  records: JSON.parse(localStorage.getItem('records')||'{}'),
-  current: new Date().toISOString().slice(0,10),
+  username: '',
+  records: {}
 };
-usernameInput.value = state.username;
 
-function buildDates(){
+function getTodayKey() {
+  const today = new Date();
+  return today.toLocaleDateString('ja-JP', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).replace(/\//g, '-');
+}
+
+function saveState() {
+  localStorage.setItem('username', state.username);
+  localStorage.setItem('records', JSON.stringify(state.records));
+}
+
+function loadState() {
+  const savedUser = localStorage.getItem('username');
+  const savedRecords = localStorage.getItem('records');
+  if (savedUser) state.username = savedUser;
+  if (savedRecords) state.records = JSON.parse(savedRecords);
+}
+
+function renderDates() {
+  const datesContainer = document.getElementById('dates');
+  datesContainer.innerHTML = '';
   const dates = Object.keys(state.records).sort();
-  datesEl.innerHTML='';
-  dates.forEach(date=>{
-    const rec = state.records[date];
-    const btn = document.createElement('button');
-    btn.textContent = date;
-    btn.classList.add(rec.every(r=>r.ok)?'passed':'broken');
-    btn.addEventListener('click', ()=> loadDate(date));
-    datesEl.appendChild(btn);
+  dates.forEach(date => {
+    const button = document.createElement('button');
+    button.textContent = date;
+    const record = state.records[date];
+    const anyBroken = record.some(r => !r.checked);
+    button.className = anyBroken ? 'broken' : 'passed';
+    button.addEventListener('click', () => {
+      currentKey = date;
+      renderPrecepts();
+      document.getElementById('currentDate').textContent = date;
+    });
+    datesContainer.appendChild(button);
   });
 }
 
-function loadDate(date){
-  state.current = date;
-  currentDateEl.textContent = state.current;
-  preceptsEl.innerHTML = '';
-  const rec = state.records[date];
+let currentKey = getTodayKey();
 
-  precepts.forEach((p,i)=>{
-    const div = document.createElement('div');
-    div.className = 'precept';
+function renderPrecepts() {
+  const container = document.querySelector('.precepts');
+  container.innerHTML = '';
+  if (!state.records[currentKey]) {
+    state.records[currentKey] = precepts.map(text => ({ text, checked: true, note: '' }));
+  }
+
+  state.records[currentKey].forEach((item, index) => {
+    const row = document.createElement('div');
+    row.className = 'precept';
 
     const label = document.createElement('label');
-    label.innerHTML = `<strong>${p.jp}</strong>`;
+    label.textContent = item.text;
 
-    let ok = rec ? rec[i].ok : true;
     const toggle = document.createElement('div');
-    toggle.className = 'toggle-switch ' + (ok?'on':'off');
+    toggle.className = 'toggle-switch ' + (item.checked ? 'on' : 'off');
     const handle = document.createElement('div');
     handle.className = 'toggle-handle';
-    handle.textContent = ok ? '〇' : '×';
+    handle.textContent = item.checked ? '〇' : '×';
     toggle.appendChild(handle);
-
-    toggle.addEventListener('click', ()=>{
-      ok = !ok;
-      toggle.className = 'toggle-switch ' + (ok?'on':'off');
-      handle.textContent = ok ? '〇' : '×';
+    toggle.addEventListener('click', () => {
+      item.checked = !item.checked;
+      renderPrecepts();
     });
 
-    const note = document.createElement('input');
-    note.type = 'text';
-    note.value = rec ? rec[i].note : '';
-    note.placeholder = '備考';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = item.note || '';
+    input.placeholder = '備考（破った理由など）';
+    input.addEventListener('input', (e) => {
+      item.note = e.target.value;
+    });
 
-    div.append(label, toggle, note);
-    preceptsEl.appendChild(div);
+    row.appendChild(label);
+    row.appendChild(toggle);
+    row.appendChild(input);
+
+    container.appendChild(row);
   });
 }
 
-saveName.addEventListener('click', ()=>{
-  const name = usernameInput.value.trim();
-  if(!name){ alert('名前を入力してください'); return;}
-  state.username = name;
-  localStorage.setItem('username', name);
-  alert('名前を保存しました：' + name);
+document.getElementById('saveName').addEventListener('click', () => {
+  const name = document.getElementById('usernameInput').value.trim();
+  if (name) {
+    state.username = name;
+    saveState();
+    alert('名前を保存しました');
+  }
 });
 
-saveDay.addEventListener('click', ()=>{
-  const recs=[];
-  document.querySelectorAll('.precept').forEach(el=>{
-    const ok = el.querySelector('.toggle-switch').classList.contains('on');
-    const note = el.querySelector('input[type=text]').value.trim();
-    recs.push({ok,note});
-  });
-  state.records[state.current] = recs;
-  localStorage.setItem('records', JSON.stringify(state.records));
-  buildDates();
-  alert(`${state.current} の記録を保存しました。`);
+document.getElementById('saveDay').addEventListener('click', () => {
+  saveState();
+  renderDates();
+  alert('記録を保存しました');
 });
 
-buildDates();
-loadDate(state.current);
+function init() {
+  loadState();
+  if (state.username) {
+    document.getElementById('usernameInput').value = state.username;
+  }
+  document.getElementById('currentDate').textContent = currentKey;
+  renderDates();
+  renderPrecepts();
+}
+
+document.addEventListener('DOMContentLoaded', init);

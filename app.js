@@ -13,16 +13,6 @@ const currentDateEl = document.getElementById('currentDate');
 const preceptsEl = document.querySelector('.precepts');
 const saveDay = document.getElementById('saveDay');
 
-// --- 新規追加部分 ---
-// ヘッダーにテストデータ読み込みボタンを追加
-const headerEl = document.querySelector('header');
-const loadTestDataBtn = document.createElement('button');
-loadTestDataBtn.textContent = 'テストデータ読み込み';
-loadTestDataBtn.style.marginLeft = '0.5rem';
-loadTestDataBtn.style.fontSize = '0.8rem';
-loadTestDataBtn.style.padding = '0.3rem 0.5rem';
-headerEl.appendChild(loadTestDataBtn);
-
 let state = {
   username: localStorage.getItem('username') || '',
   records: JSON.parse(localStorage.getItem('records')||'{}'),
@@ -101,63 +91,5 @@ saveDay.addEventListener('click', ()=>{
   alert(`${state.current} の記録を保存しました。`);
 });
 
-// --- ここから新規追加部分 ---
-// テストデータ
-const testRecords = {
-  "2025-06-01": [
-    { ok: true, note: "良い日" },
-    { ok: false, note: "失敗した" },
-    { ok: true, note: "" },
-    { ok: true, note: "" },
-    { ok: true, note: "控えめに" }
-  ],
-  "2025-06-02": [
-    { ok: true, note: "" },
-    { ok: true, note: "" },
-    { ok: true, note: "" },
-    { ok: true, note: "" },
-    { ok: true, note: "" }
-  ],
-  "2025-06-03": [
-    { ok: false, note: "気をつける" },
-    { ok: true, note: "" },
-    { ok: true, note: "" },
-    { ok: false, note: "嘘をついた" },
-    { ok: true, note: "" }
-  ],
-  "2025-06-04": [
-    { ok: true, note: "" },
-    { ok: true, note: "" },
-    { ok: true, note: "" },
-    { ok: true, note: "" },
-    { ok: false, note: "飲酒した" }
-  ],
-  "2025-06-05": [
-    { ok: true, note: "" },
-    { ok: false, note: "盗みそうになった" },
-    { ok: true, note: "" },
-    { ok: true, note: "" },
-    { ok: true, note: "" }
-  ],
-  "2025-06-06": [
-    { ok: true, note: "" },
-    { ok: true, note: "" },
-    { ok: false, note: "不正行為" },
-    { ok: true, note: "" },
-    { ok: true, note: "" }
-  ],
-};
-
-loadTestDataBtn.addEventListener('click', () => {
-  if(confirm('テストデータを読み込みます。既存の記録は上書きされます。よろしいですか？')){
-    state.records = {...testRecords};
-    localStorage.setItem('records', JSON.stringify(state.records));
-    buildDates();
-    loadDate(Object.keys(state.records).sort()[0]);
-    alert('テストデータを読み込みました。');
-  }
-});
-
-// 初回表示の構築
 buildDates();
 loadDate(state.current);
